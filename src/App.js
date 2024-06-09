@@ -10,7 +10,7 @@ import Rank from './components/Rank/Rank';
 import './App.css';
 
 const app = new Clarifai.App({
-  apikey: '2149052901b241089828ece3a1ac77f6'
+  apikey: 'INSERT_API_HERE'
 });
 
 const particlesOptions = {
@@ -31,8 +31,13 @@ class App extends Component {
     super();
     this.state = {
       input: '',
-      imageURL: ''
+      imageURL: '',
+      box: {},
     }
+  }
+
+  calculateFaceLocation = (data) => {
+
   }
 
   onInputChange = (event) => {
@@ -47,7 +52,7 @@ class App extends Component {
         this.state.input)
       .then(
       function(response) {
-        console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
+        this.calculateFaceLocation(response);
       },
       function(err) {
 
