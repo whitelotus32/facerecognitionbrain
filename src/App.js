@@ -78,14 +78,30 @@ class App extends Component {
     this.setState({input: event.target.value});
   }
 
-  onButtonSubmit = () => {
+  onPictureSubmit = () => {
     this.setState=({imageURL: this.state.input});
     app.models
       .predict(
         Clarifai.FACE_DETECT_MODEL, 
         this.state.input)
-      .then(response => this.displayFaceBox(this.calculateFaceLocation(response)))
-      .catch(err => console.log(err));
+      .then(response => {
+        if (response) {
+          fetch('http://localhost:3000/image', {
+            method: 'put',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                id: this.state.user.id
+            })
+          })
+            .then(response => response.json())
+            .then(count => {
+              this.setState(Object.assign(this.state.user, { entries: count } ))
+            })
+
+        }
+        this.displayFaceBox(this.calculateFaceLocation(response))
+      })
+        .catch(err => console.log(err));
 
   }
 
@@ -111,7 +127,7 @@ class App extends Component {
               <Rank />
               <ImageLinkForm 
               onInputChange={this.onInputChange} 
-              onButtonSubmit={this.onButtonSubmit} 
+              onPictureSubmit={this.onPictureSubmit} 
               />
               <FaceRecognition box={box} imageURL={imageURL} />
             </div>
