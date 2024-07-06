@@ -42,7 +42,6 @@ class App extends Component {
     super();
     this.state = initialState;
     }
-  }
 
   loadUser = (data) => {
     this.setState({user: {
@@ -83,6 +82,7 @@ class App extends Component {
       body: JSON.stringify({
           input: this.state.input
       })
+    })
       .then(response => response.json())
       .then(response => {
         if (response) {
@@ -102,7 +102,7 @@ class App extends Component {
         }
         this.displayFaceBox(this.calculateFaceLocation(response))
       })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err));
   }
 
   onRouteChange = (route) => {
@@ -111,9 +111,10 @@ class App extends Component {
     } else if(route === 'home') {
       this.setState({isSignedIn: true})
     }
+    this.setState({route: route});
   }
 
-  render(); {
+  render() {
     const { isSignedIn, imageURL, route,  box } = this.state;
     return (
       <div className="App">
@@ -124,21 +125,24 @@ class App extends Component {
         { route === 'home' 
           ? <div>
               <Logo />
-              <Rank />
+              <Rank 
+              name={this.state.user.name}
+              entries={this.state.user.entries}
+              />
               <ImageLinkForm 
               onInputChange={this.onInputChange} 
-              onPictureSubmit={this.onPictureSubmit} 
+              onButtonSubmit={this.onButtonSubmit} 
               />
               <FaceRecognition box={box} imageURL={imageURL} />
             </div>
           : (
             route === 'SignIn' 
-            ? <SignIn onRouteChange={this.onRouteChange} />
+            ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
             : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
           )
         }
       </div>
     );
   }
-
+}
 export default App;

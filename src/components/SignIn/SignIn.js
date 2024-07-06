@@ -82,4 +82,4 @@ class SignIn extends React.Component {
     
 }
 
-export default Navigation;
+export default SignIn;

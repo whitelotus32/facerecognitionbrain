@@ -12,4 +12,4 @@ const FaceRecognition = ({ imageURL, box }) => {
     )
 }
 
-export default Navigation;
+export default FaceRecognition;
